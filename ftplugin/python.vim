@@ -38,12 +38,6 @@
 " you'll have to do this in two places.
 let s:defpat = '^\s*\(@\|class\s.*:\|def\s\)'
 
-" (**) Ignore non-python files
-" Commented out because some python files are not recognized by Vim
-if &filetype != 'python'
-   finish
-endif
-
 setlocal foldmethod=expr
 setlocal foldexpr=GetPythonFold(v:lnum)
 setlocal foldtext=PythonFoldText()
