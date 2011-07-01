@@ -30,18 +30,12 @@
 " if condition | statement
 " wherever I found that useful
 
-" (*)
-" class definitions are supposed to contain a colon on the same line. function
-" definitions are *not* required to have a colon, to allow for multiline defs.
-" If you disagree, use instead of the pattern '^\s*\(class\s.*:\|def\s\)' to
-" enforce : for defs:                     '^\s*\(class\|def\)\s.*:' you'll
-" have to do this in two places.
-let s:defpat = '^\s*\(@\|class\s.*:\|def\s\)'
+let s:defpat = '^\s*\(class\|def\)\s.*:'
 
 setlocal foldmethod=expr
 setlocal foldexpr=GetPythonFold(v:lnum)
 
-if exists('g:jpythonfold_CustomFoldText') && g:jpythonfold_CustomFoldText
+if exists('g:jpythonfold_CustomFoldText') && g:jpythonfold_CustomFoldText 
   setlocal foldtext=PythonFoldText()
 endif
 
@@ -189,18 +183,21 @@ function! GetPythonFold(lnum)
     endif
 endfunction
 
-" higher foldlevel theory
-" There are five kinds of statements: S (code), D (def/class), E (empty), C (comment)
+" Higher Foldlevel Theory
+"
+" There are five kinds of statements: S (code), D (def/class), E (empty), C
+" (comment).
 
 " Note that a decorator statement (beginning with @) counts as definition,
-" but that of a sequence of @,@,@,def only the first one counts
-" This means that a definiion only counts if not preceded by a decorator
+" but that of a sequence of @,@,@,def only the first one counts.
+" This means that a definition only counts if not preceded by a decorator.
 
 " There are two kinds of folds: R (regular), G (global statements)
 
-" There are five indent situations with respect to the previous non-emtpy non-comment line:
-" > (indent), < (dedent), = (same); < and = combine with 0 (indent is zero)
-" Note: if the previous line is class/def, its indent is interpreted as one higher
+" There are five indent situations with respect to the previous non-empty
+" non-comment line: > (indent), < (dedent), = (same); < and = combine with 0
+" (indent is zero). Note: if the previous line is class/def, its indent is
+" interpreted as one higher.
 
 " There are three indent situations with respect to the next (non-E non-C) line:
 " > (dedent), < (indent), = (same)
