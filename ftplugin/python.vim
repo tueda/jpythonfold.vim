@@ -18,9 +18,9 @@
 "    allowing for multiline def and class definitions see (*)
 
 " Note for vim 7 users:
-" Vim 6 line numbers always take 8 columns, while vim 7 has a numberwidth variable
-" you can change the 8 below to &numberwidth if you have vim 7,
-" this is only really useful when you plan to use more than 8 columns (i.e. never)
+" Vim 6 line numbers always take 8 columns, while vim 7 has a numberwidth
+" variable you can change the 8 below to &numberwidth if you have vim 7, this
+" is only really useful when you plan to use more than 8 columns (i.e. never)
 
 " Note for masochists trying to read this:
 " I wanted to keep the functions short, so I replaced occurences of
@@ -31,16 +31,19 @@
 " wherever I found that useful
 
 " (*)
-" class definitions are supposed to ontain a colon on the same line.
-" function definitions are *not* required to have a colon, to allow for multiline defs.
-" I you disagree, use instead of the pattern '^\s*\(class\s.*:\|def\s\)'
-" to enforce : for defs:                     '^\s*\(class\|def\)\s.*:'
-" you'll have to do this in two places.
+" class definitions are supposed to contain a colon on the same line. function
+" definitions are *not* required to have a colon, to allow for multiline defs.
+" If you disagree, use instead of the pattern '^\s*\(class\s.*:\|def\s\)' to
+" enforce : for defs:                     '^\s*\(class\|def\)\s.*:' you'll
+" have to do this in two places.
 let s:defpat = '^\s*\(@\|class\s.*:\|def\s\)'
 
 setlocal foldmethod=expr
 setlocal foldexpr=GetPythonFold(v:lnum)
-setlocal foldtext=PythonFoldText()
+
+if exists('g:jpythonfold_CustomFoldText') && g:jpythonfold_CustomFoldText
+  setlocal foldtext=PythonFoldText()
+endif
 
 function! PythonFoldText()
   let fs = v:foldstart
