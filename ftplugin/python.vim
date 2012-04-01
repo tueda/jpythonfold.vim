@@ -1,7 +1,7 @@
-" Fold routines for python code, version 3.2
-" Source: http://www.vim.org/scripts/script.php?script_id=2527
-" Last Change: 2009 Feb 25
+" Fold routines for python code
+" Version: 3.3
 " Author: Jurjen Bos
+" Maintainer: Mohammed Badran
 " Bug fixes and helpful comments: Grissiom, David Froger, Andrew McNabb
 
 " Principles:
@@ -12,10 +12,10 @@
 " other lines outside a def/class are folded together as a group
 " for algorithm, see bottom of script
 
-" - optionally, you can get empty lines between folds, see (***)
-" - another option is to ignore non-python files see (**)
-" - you can also modify the def/class check,
-"    allowing for multiline def and class definitions see (*)
+" - optionally, you can get empty lines between folds, see (***) TODO:
+"   implement this option
+"   TODO: contact author about changes
+" - optionally, you can get custom python fold text
 
 " Note for vim 7 users:
 " Vim 6 line numbers always take 8 columns, while vim 7 has a numberwidth
@@ -30,12 +30,12 @@
 " if condition | statement
 " wherever I found that useful
 
-let s:defpat = '^\s*\(class\|def\)\s.*:'
+let s:defpat = '^\s*\(@\|class\s.*:\|def\s\)'
 
 setlocal foldmethod=expr
 setlocal foldexpr=GetPythonFold(v:lnum)
 
-if exists('g:jpythonfold_CustomFoldText') && g:jpythonfold_CustomFoldText 
+if exists('g:jpythonfold_CustomFoldText') && g:jpythonfold_CustomFoldText
   setlocal foldtext=PythonFoldText()
 endif
 
@@ -65,7 +65,8 @@ function! PythonFoldText()
   "expand tabs (mail me if you have tabstop>10)
   let onetab = strpart('          ', 0, &tabstop)
   let line = substitute(line, '\t', onetab, 'g')
-  return strpart(line.spcs, 0, w-strlen(size)-7).'.'.size.' lines'
+  let fix = strlen(line) - strlen(substitute(line, ".", "x", "g"))  " fix for non-ascii symbols
+  return strpart(line.spcs, 0, w-strlen(size)-7+fix).'.'.size.' lines'
 endfunction
 
 function! GetBlockIndent(lnum)
