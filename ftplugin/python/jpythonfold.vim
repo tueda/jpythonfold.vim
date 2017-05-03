@@ -134,6 +134,12 @@ function! GetPythonFold(lnum)
     " if begin of file: take zero
     elseif p==0 | let pind = 0
     endif
+    " If ')', ']' or '}' is at the beginning of the line, then it probably
+    " indicates a continued line. Though '"""' and "'''" are difficult to be
+    " judged, we don't make folds for them to be on the safe side.
+    if line =~ '^\s*[)}\]]\|^\s*"""\|^\s*'''''''
+        return '='
+    endif
     " Case S*=* and C*=*: indent equal
     if ind>0 && ind==pind | return '='
     " Case S*>* and C*>*: indent increase
