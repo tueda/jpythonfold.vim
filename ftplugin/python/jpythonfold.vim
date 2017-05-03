@@ -44,16 +44,18 @@ function! PythonFoldText()
   while getline(fs) =~ '^\s*@' | let fs = nextnonblank(fs + 1)
   endwhile
   let line = getline(fs)
-  let nnum = nextnonblank(fs + 1)
-  let nextline = getline(nnum)
-  "get the document string: next line is ''' or """
-  if nextline =~ "^\\s\\+[\"']\\{3}\\s*$"
-      let line = line . " " . matchstr(getline(nextnonblank(nnum + 1)), '^\s*\zs.*\ze$')
-  "next line starts with qoutes, and has text
-  elseif nextline =~ "^\\s\\+[\"']\\{1,3}"
-      let line = line." ".matchstr(nextline, "^\\s\\+[\"']\\{1,3}\\zs.\\{-}\\ze['\"]\\{0,3}$")
-  elseif nextline =~ '^\s\+pass\s*$'
-    let line = line . ' pass'
+  if !exists('g:jpythonfold_FoldTextWithoutDocstrings') || !g:jpythonfold_FoldTextWithoutDocstrings
+    let nnum = nextnonblank(fs + 1)
+    let nextline = getline(nnum)
+    "get the document string: next line is ''' or """
+    if nextline =~ "^\\s\\+[\"']\\{3}\\s*$"
+        let line = line . " " . matchstr(getline(nextnonblank(nnum + 1)), '^\s*\zs.*\ze$')
+    "next line starts with qoutes, and has text
+    elseif nextline =~ "^\\s\\+[\"']\\{1,3}"
+        let line = line." ".matchstr(nextline, "^\\s\\+[\"']\\{1,3}\\zs.\\{-}\\ze['\"]\\{0,3}$")
+    elseif nextline =~ '^\s\+pass\s*$'
+      let line = line . ' pass'
+    endif
   endif
   "compute the width of the visible part of the window (see Note above)
   let w = winwidth(0) - &foldcolumn - (&number ? 8 : 0)
