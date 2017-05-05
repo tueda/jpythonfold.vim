@@ -77,6 +77,9 @@ function! GetBlockIndent(lnum)
     " scan backwards for class/def that is shallower or equal
     let ind = 100
     let p = a:lnum+1
+    if p > line('$')
+        let p = line('$')
+    endif
     while indent(p) >= 0
         let p = p - 1
         " skip empty and comment lines
