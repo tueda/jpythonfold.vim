@@ -186,7 +186,7 @@ function! GetPythonFold(lnum)
     let nind = indent(n)
     " Case CR<= and CR<>
     "if line !~ '^\s*#' | call PrintIfCount(4,"Line: ".a:lnum.", blockindent: ".blockindent.", n: ".n.", nind: ".nind.", p: ".p.", pind: ".pind)
-    endif
+    "endif
     if line =~ '^\s*#' && ind>=nind | return -1
     " Case CR<<: return next indent
     elseif line =~ '^\s*#' | return nind / &shiftwidth
