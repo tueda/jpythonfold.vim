@@ -84,6 +84,8 @@ function! GetBlockIndent(lnum)
         let p = p - 1
         " skip empty and comment lines
         if getline(p) =~ '^$\|^\s*#' | continue
+        " skip lines starting with ')', ']', '}', '"""' or "'''".
+        elseif getline(p) =~ '^\s*[)}\]]\|^\s*"""\|^\s*''''''' | continue
         " zero-level regular line
         elseif indent(p) == 0 | return 0
         " skip deeper or equal lines
